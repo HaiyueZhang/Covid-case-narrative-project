@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Narrative Visualization</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <script src="https://d3js.org/d3-annotation.v2.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .scene {
+        margin-bottom: 2em;
+      }
+      .annotation-group text {
+        font-size: 0.8em;
+        fill: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene-1" class="scene"></div>
+    <div id="scene-2" class="scene"></div>
+    <div id="scene-3" class="scene"></div>
+    <button id="next">Next</button>
+    <script>
+      let currentScene = 1;
+      let scenes = [];
+      let data = [];
+      let width = 600;
+      let height = 400;
+      let margin = { top: 30, right: 30, bottom: 50, left: 50 };
+      let xScale = d3.scaleTime().range([margin.left, width - margin.right]);
+      let yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
+      let xAxis = d3.axisBottom(xScale).ticks(6);
+      let yAxis = d3.axisLeft(yScale);
+      let parseDate = d3.timeParse("%Y-%m-%d");
+      let line = d3
+        .line()
+        .x((d) => xScale(d.date))
+        .y((d) => yScale(d.cases));
+
+      let svg = d3
+        .select("#scene-1")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      d3.csv("/data/new-york-data.csv", (d) => {
+        console.log(d);
+        return {
+          date: parseDate(d.date),
+          state: d.state,
+          cases: +d.cases,
+          deaths: +d.deaths,
+        };
+      }).then((d) => {
+        data = d;
+        setupScenes();
+        showScene(1);
+      });
+
+      function setupScenes() {
+        scenes[1] = svg.append("g");
+        scenes[2] = svg.append("g").attr("opacity", 0);
+        scenes[3] = svg.append("g").attr("opacity", 0);
+
+        // Scene 1
+        createScene1();
+
+        // Scene 2
+        createScene2();
+
+        // Scene 3
+        createScene3();
+      }
+
+      function showScene(sceneNum) {
+        currentScene = sceneNum;
+        scenes.forEach((s, i) => {
+          s.transition()
+            .duration(500)
+            .attr("opacity", i === sceneNum ? 1 : 0);
+        });
+        if (currentScene === 3) {
+          d3.select("#next").style("display", "none");
+        }
+      }
+
+      function createScene1() {
+        xScale.domain(d3.extent(data, (d) => d.date));
+        yScale.domain([0, d3.max(data, (d) => d.cases)]);
+
+        // draw x-axis
+        scenes[1]
+          .append("g")
+          .attr("transform", `translate(0,${height - margin.bottom})`)
+          .call(xAxis);
+
+        // draw y-axis
+        scenes[1]
+          .append("g")
+          .attr("transform", `translate(${margin.left},0)`)
+          .call(yAxis);
+
+        // draw line
+        scenes[1]
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 1.5)
+          .attr("d", line);
+      }
+
+      function createScene2() {
+        // copy scene 1
+        scenes[2].html(scenes[1].node().innerHTML);
+
+        // add annotations
+        let annotations = [
+          {
+            note: { label: "Covid cases start to decrease" },
+            x: xScale(parseDate("2021-02-01")),
+            y: yScale(8932),
+            dx: 150,
+            dy: -50,
+          },
+        ];
+
+        let makeAnnotations = d3.annotation().annotations(annotations);
+
+        scenes[2]
+          .append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations);
+      }
+
+      function createScene3() {
+        // copy scene 2
+        scenes[3].html(scenes[2].node().innerHTML);
+
+        // add more annotations
+        let annotations = [
+          {
+            note: { label: "Covid cases significantly decreased" },
+            x: xScale(parseDate("2022-04-01")),
+            y: yScale(300),
+            dx: -150,
+            dy: -50,
+          },
+        ];
+
+        let makeAnnotations = d3.annotation().annotations(annotations);
+
+        scenes[3]
+          .append("g")
+          .attr("class", "annotation-group")
+          .call(makeAnnotations);
+      }
+
+      // Add an event listener to the "next" button
+      d3.select("#next").on("click", function () {
+        if (currentScene < 3) {
+          showScene(currentScene + 1);
+        }
+      });
+    </script>
+  </body>
+</html>
