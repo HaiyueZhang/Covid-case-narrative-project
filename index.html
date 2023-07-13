@@ -1,171 +1,752 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Narrative Visualization</title>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script src="https://d3js.org/topojson.v3.min.js"></script>
-    <script src="https://d3js.org/d3-annotation.v2.min.js"></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-      }
-      .scene {
-        margin-bottom: 2em;
-      }
-      .annotation-group text {
-        font-size: 0.8em;
-        fill: #333;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="scene-1" class="scene"></div>
-    <div id="scene-2" class="scene"></div>
-    <div id="scene-3" class="scene"></div>
-    <button id="next">Next</button>
+    <!-- D3 library -->
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <!-- D3 Annotations library -->
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+    <!-- Helpers -->
     <script>
-      let currentScene = 1;
-      let scenes = [];
-      let data = [];
-      let width = 600;
-      let height = 400;
-      let margin = { top: 30, right: 30, bottom: 50, left: 50 };
-      let xScale = d3.scaleTime().range([margin.left, width - margin.right]);
-      let yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
-      let xAxis = d3.axisBottom(xScale).ticks(6);
-      let yAxis = d3.axisLeft(yScale);
-      let parseDate = d3.timeParse("%Y-%m-%d");
-      let line = d3
-        .line()
-        .x((d) => xScale(d.date))
-        .y((d) => yScale(d.cases));
+        // Helper to call something on end of all transitions from https://stackoverflow.com/questions/10692100/invoke-a-callback-at-the-end-of-a-transition/20773846#20773846
+        function endall(transition, callback) { 
+            if (typeof callback !== "function") throw new Error("Wrong callback in endall");
+            if (transition.size() === 0) { callback() }
+            var n = 0; 
+            transition 
+                .each(function() { ++n; }) 
+                .each("end", function() { if (!--n) callback.apply(this, arguments); }); 
+        } 
 
-      let svg = d3
-        .select("#scene-1")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
-      d3.csv("/data/new-york-data.csv", (d) => {
-        console.log(d);
-        return {
-          date: parseDate(d.date),
-          state: d.state,
-          cases: +d.cases,
-          deaths: +d.deaths,
-        };
-      }).then((d) => {
-        data = d;
-        setupScenes();
-        showScene(1);
-      });
-
-      function setupScenes() {
-        scenes[1] = svg.append("g");
-        scenes[2] = svg.append("g").attr("opacity", 0);
-        scenes[3] = svg.append("g").attr("opacity", 0);
-
-        // Scene 1
-        createScene1();
-
-        // Scene 2
-        createScene2();
-
-        // Scene 3
-        createScene3();
-      }
-
-      function showScene(sceneNum) {
-        currentScene = sceneNum;
-        scenes.forEach((s, i) => {
-          s.transition()
-            .duration(500)
-            .attr("opacity", i === sceneNum ? 1 : 0);
-        });
-        if (currentScene === 3) {
-          d3.select("#next").style("display", "none");
+        function getFile(path){
+            const baseUrl = "https://raw.githubusercontent.com/ckeenan34/ckeenan34.github.io/main/";
+            return baseUrl + path;
         }
-      }
-
-      function createScene1() {
-        xScale.domain(d3.extent(data, (d) => d.date));
-        yScale.domain([0, d3.max(data, (d) => d.cases)]);
-
-        // draw x-axis
-        scenes[1]
-          .append("g")
-          .attr("transform", `translate(0,${height - margin.bottom})`)
-          .call(xAxis);
-
-        // draw y-axis
-        scenes[1]
-          .append("g")
-          .attr("transform", `translate(${margin.left},0)`)
-          .call(yAxis);
-
-        // draw line
-        scenes[1]
-          .append("path")
-          .datum(data)
-          .attr("fill", "none")
-          .attr("stroke", "steelblue")
-          .attr("stroke-width", 1.5)
-          .attr("d", line);
-      }
-
-      function createScene2() {
-        // copy scene 1
-        scenes[2].html(scenes[1].node().innerHTML);
-
-        // add annotations
-        let annotations = [
-          {
-            note: { label: "Covid cases start to decrease" },
-            x: xScale(parseDate("2021-02-01")),
-            y: yScale(8932),
-            dx: 150,
-            dy: -50,
-          },
-        ];
-
-        let makeAnnotations = d3.annotation().annotations(annotations);
-
-        scenes[2]
-          .append("g")
-          .attr("class", "annotation-group")
-          .call(makeAnnotations);
-      }
-
-      function createScene3() {
-        // copy scene 2
-        scenes[3].html(scenes[2].node().innerHTML);
-
-        // add more annotations
-        let annotations = [
-          {
-            note: { label: "Covid cases significantly decreased" },
-            x: xScale(parseDate("2022-04-01")),
-            y: yScale(300),
-            dx: -150,
-            dy: -50,
-          },
-        ];
-
-        let makeAnnotations = d3.annotation().annotations(annotations);
-
-        scenes[3]
-          .append("g")
-          .attr("class", "annotation-group")
-          .call(makeAnnotations);
-      }
-
-      // Add an event listener to the "next" button
-      d3.select("#next").on("click", function () {
-        if (currentScene < 3) {
-          showScene(currentScene + 1);
+        function countUnique(arr, prop="name"){
+            return uniqueByProp(arr, prop).length;
         }
-      });
+        function uniqueByProp(arr, prop="name"){
+            return Array.from(new Set(Array.from(arr).map(v=> v[prop])))
+        }
+        function filterByProps(data, mapping={}){
+            var newData = data;
+            Object.keys(mapping).forEach(prop => {
+                var func = typeof(mapping[prop])==='function' ? mapping[prop]: (d) => d[prop] === mapping[prop];
+                newData = newData.filter(func);
+            });
+            return newData;
+        }
+        function sortByProp(data, prop){
+            data.sort((a,b)=> d3.descending(+a[prop], +b[prop]));
+            return data;
+        }
+        // ordinal function credited to https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number/57518703#57518703
+        function ordinal(number) {
+            const english_ordinal_rules = new Intl.PluralRules("en", {
+                type: "ordinal"
+            });
+            const suffixes = {
+                one: "st",
+                two: "nd",
+                few: "rd",
+                other: "th"
+            }
+            const suffix = suffixes[english_ordinal_rules.select(number)];
+            return (number + suffix);
+        }
+        // times a number by a billion. Helpful since the data comes in divided by a billion
+        function tb(num){
+            return num*1000000000;
+        }
+
+        function tooltip(d, slide){
+            var rows = []
+            rows.push(`${d.name} was worth: $${tb(d["wealth.worth in billions"]).toLocaleString()}`)
+            var company = `${d["company.name"]}, created ${d["company.founded"]}`;
+            if (d["company.relationship"].toLowerCase() !== "relation"){
+                company = `${d["company.relationship"]} of ${company}`;
+            } else {
+                company = `Associated with ${company}`;
+            }
+            rows.push(company);
+            var rankAge = `ranked ${d.rank} in ${d.year}`;
+            if (slide === 3){
+                rankAge = `Was ${d["demographics.age"]}yo and ${rankAge}`;
+            } 
+            rows.push(rankAge);
+            if (d["wealth.how.inherited"] !== "not inherited"){
+                if (d["wealth.how.inherited"].includes("generation")){
+                    rows.push(`${d["wealth.how.inherited"]} wealth`)
+                }else{
+                    rows.push(`inherited from ${d["wealth.how.inherited"]}`)
+                }
+            }
+            return rows.join("<br>");
+        }
+        // setting up a global variable for saving parameters and caching data
+        let props = {
+            originalData: undefined,
+            data: undefined,
+            funcs: {
+                nextSlide: undefined,
+                prevSlide: undefined
+            }
+        }
+        const slides = [
+            {
+                xAxis: "wealth.worth in billions",
+                xAxisTitle: "Wealth (in Billions USD)",
+                yAxis: "name",
+                colorBy: "wealth.how.industry",
+                filters: {
+                    year: "2014"
+                },
+                slide: 1,
+                tooltip: (d) => tooltip(d,1)
+            },
+            {
+                xAxis: "wealth.per.gdp",
+                xAxisTitle: "Wealth per GDP of Home Country (unitless)",
+                yAxis: "name",
+                colorBy: "location.region",
+                filters: {
+                    year: "2014"
+                },
+                slide: 2,
+                tooltip: (d) => tooltip(d,2)
+            },
+            {
+                xAxis: "wealth.per.age",
+                xAxisTitle: "Wealth per age (Billions of USD/Years)",
+                yAxis: "name",
+                colorBy: "demographics.gender",
+                filters: {
+                    year: "2014",
+                    "wealth.per.age": d => d["wealth.per.age"] > 0
+                },
+                slide: 3,
+                tooltip: (d) => tooltip(d,3)
+            },
+            {
+                xAxis: "wealth.per.age",
+                xAxisTitle: "Wealth per age (Billions of USD/Years)",
+                yAxis: "name",
+                colorBy: "wealth.how.inherited",
+                filters: {
+                    year: "2014",
+                    "wealth.per.age": d => d["wealth.per.age"] > 0
+                },
+                slide: 4,
+                tooltip: (d) => tooltip(d,3)
+            },
+        ]
+        // start with slide 1 properties
+        function switchParamsToSlide(slide){
+            slide = Math.floor(slide);
+            if (slide > slides.length || slide <= 0){
+                console.warn("Invalid slide: "+ slide);
+                return false;
+            }
+            var year = props.filters?.year;
+            props.slide = slide;
+            Object.assign(props, slides[slide-1]);
+            if (year){
+                props.filters.year = year;
+            }
+            return true;
+        }
     </script>
-  </body>
+
+    <!-- Main D3 visualizations -->
+    <script>
+        // forced to wrap this in async function so we can use await
+        (async()=>{
+            // start on slide 1
+            switchParamsToSlide(1);
+
+            // fetch the data and stitch 
+            let data = await d3.csv(getFile("/data/billionaires.csv"));
+            let gdp2014Data = await d3.csv(getFile("/data/GDP_2014.csv"));
+            let countryToGdp = {}
+            gdp2014Data.forEach((country) => {
+                countryToGdp[country['Country']] = country['GDP'];
+            });
+
+            const industryCorrections = {
+                "Hedge funds": "Finance",
+                "Money Management": "Finance",
+                "Venture Capital": "Finance",
+                "Retail, Restaurant": "Consumer",
+                "Private equity/leveraged buyout": "Finance",
+                "Diversified financial": "Finance",
+                "Constrution": "Construction", // whoever made this dataset does not know how to spell
+                "Technology-Medical": "Technology",
+                "Technology-Computer": "Technology"
+            }
+            data.forEach(d => {
+                if (!d["location.gdp"] || +d["location.gdp"] === 0){
+                    d["location.gdp"] = countryToGdp[d['location.citizenship']];
+                }
+                d['wealth.per.gdp'] = !(denom = +d["location.gdp"]) || denom===0 ? 0: tb(+d["wealth.worth in billions"])/denom;
+                d['wealth.per.age'] = !(denom = +d["demographics.age"]) || denom===0 ? 0: +d["wealth.worth in billions"]/denom;
+                if (d["wealth.how.industry"] in industryCorrections){
+                    d["wealth.how.industry"] = industryCorrections[d["wealth.how.industry"]];
+                }
+            });
+            props.originalData = data;
+
+            // setup the default props
+            props.data = filterByProps(props.originalData, props.filters);
+            props.data = sortByProp(props.data, props.xAxis);
+            console.log(props.data);
+
+            var countUniqueNames = countUnique(props.data);
+
+            // Credit to https://d3-graph-gallery.com/graph/barplot_horizontal.html for getting me started on a horizontal bar chart
+            // I've modified this quite a bit, 
+            // set the dimensions and margins of the graph
+            var margin = {top: 80, right: 300, bottom: 40, left: 300},
+                width = window.innerWidth - 20 - margin.left - margin.right,
+                height = 20*countUniqueNames - margin.top - margin.bottom;
+
+            d3.selectAll(".btns")
+                .style("margin-left", margin.left+ "px")
+                .style("max-width", width + "px")
+                .style("min-width", width*3/4 + "px")
+           
+            d3.selectAll(".yearSelection")
+                .style("margin-left", width/2 - 80+ "px")
+
+            // append the svg object to the body of the page
+            var svg = d3.select("#svg1")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+            // Add X axis
+            var x = d3.scaleLinear()
+                .domain([0, 1.1*d3.max(props.data, (d)=> +d[props.xAxis])])
+                .range([0, width]);
+            var xAxis = d3.axisTop(x);
+
+            svg.append("text")
+                .attr("class", "xAxisTitle")
+                .attr("text-anchor", "middle")
+                .attr("x", width/2)
+                .attr("y", -margin.top/2)
+                .text("Wealth in Billions (USD)");
+            svg.append("g")
+                .attr("class", "xaxis")
+                .transition().duration(0)
+                .call(xAxis);
+
+            // Y axis
+            var y = d3.scaleBand()
+                .range([ 0, height ])
+                .domain(props.data.map(function(d) { return d.name; }))
+                .padding(.1);
+
+            var yAxis = d3.axisLeft(y);
+            svg.append("g")
+                .attr("class", "yaxis")
+                .transition().duration(0)
+                .call(yAxis)
+
+            var colorKeys = uniqueByProp(props.data, props.colorBy);
+            var colorScale = d3.scaleOrdinal()
+                .domain(colorKeys)
+                .range(d3.schemeCategory10);
+
+            // Setup tooltip. Modified from this helpful page https://d3-graph-gallery.com/graph/interactivity_tooltip.html
+            var Tooltip = d3.select("#chart")
+                .append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0)
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "2px")
+                .style("border-radius", "5px")
+                .style("padding", "5px")
+
+            // Three function that change the tooltip when user hover / move / leave a cell
+            var mouseover = function(d) {
+                Tooltip
+                .style("opacity", 1)
+                .html(props.tooltip(d))
+                .style("left", (x(d[props.xAxis])+margin.left+10) + "px")
+                .style("top", (y(d.name)+margin.top) + "px")
+                d3.select(this)
+                .style("stroke", "black")
+                .style("opacity", 1)
+            }
+            var mouseleave = function(d) {
+                Tooltip
+                .style("opacity", 0)
+                d3.select(this)
+                .style("stroke", "none")
+                .style("opacity", 0.9)
+            }
+            
+            //Bars
+            svg.selectAll("rect")
+                .data(props.data)
+                .enter()
+                .append("rect")
+                    .attr("y", function(d) { return y(d[props.yAxis]); })
+                    .attr("height", y.bandwidth())
+                    .on("click", (d)=> window.open("https://www.google.com/search?q=" + encodeURIComponent(d.name), "_blank"))
+                    .on("mouseover", mouseover)
+                    .on("mouseleave", mouseleave)
+                .transition().duration(1000)
+                    .attr("x", x(0))
+                    .attr("y", function(d) { return y(d[props.yAxis]); })
+                    .attr("width", function(d) { return x(d[props.xAxis]); })
+                    .attr("height", y.bandwidth())
+                    .attr("fill", (d) => colorScale(d[props.colorBy]))
+                    .style("opacity", 0.9)
+                    .end()
+                    .then(addSlideAnnotations) // add the annotations (see below for all annotation functions)
+
+            // build the legend
+            console.log(width);
+            var legend = d3.select('#svg1')
+                            .append("g")
+                            .attr("transform",
+                                "translate(" + (width + margin.left/2) + "," + margin.top*2 + ")")
+
+            var legendRectSize = 20;
+            legend.selectAll("rect")
+                .data(colorKeys)
+                .enter()
+                .append("rect")
+                    .attr("width", legendRectSize)
+                    .attr("height", legendRectSize)
+                    .attr("x", 100)
+                    .attr("y", function(d,i){ return 100 + i*(legendRectSize+5)})
+                    .style("fill", function(d){ return colorScale(d)})
+
+            // Add one dot in the legend for each name.
+            legend.selectAll("text")
+                .data(colorKeys)
+                .enter()
+                .append("text")
+                .attr("x", 100 + legendRectSize*1.2)
+                    .attr("y", function(d,i){ return 100 + i*(legendRectSize+5) + (legendRectSize/2)})
+                    .style("fill", function(d){ return colorScale(d)})
+                    .text(function(d){ return d})
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+
+            // annotations
+            function annotationLocation(selector, rectContactLoc=1){
+                var row;
+                if (typeof(selector) == "string"){
+                    row = props.data.find(d => d.name === selector);
+                }else if (typeof(selector) == 'number'){
+                    row = props.data?.[selector];
+                }
+                if (!row){
+                    // if this is invalid, return a point that doesn't show up on the chart
+                    return {x: -10000, y: -10000}
+                }
+                return {
+                    x: x(row[props.xAxis]) + margin.left,
+                    y: y(row[props.yAxis]) + margin.top + y.bandwidth() * rectContactLoc
+                }
+            }
+            function topNAnnotation(n, percent){
+                if (percent){
+                    n = Math.floor(props.data.length*percent+.5);
+                }
+                var total = d3.sum(props.data.slice(0, n).map(o=>o[props.xAxis]))
+                total *= 1000000000;
+                total = Math.floor(total + .5);
+                return {
+                    note: {
+                        label: `The ${n} people above this line have a combined total of \$${total.toLocaleString()}`,
+                        title: "",
+                        wrap: 190
+                    },
+                    dy: 0,
+                    dx: 100,
+                    color: ["black"],
+                    ...annotationLocation(n-1, 1),
+                    years: new Set(["1996", "2001", "2014"])
+                }
+            }
+            function selectAnnotations(slide, year){
+                const annotations = [
+                    {
+                        note: {
+                            label: "at this point, tech was what made the richest person worth what he was, but was close to media and consumer products- a trend worth keeping an eye on.",
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 100,
+                        dx: -100,
+                        color: ["black"],
+                        ...annotationLocation("Bill Gates"),
+                        slides: new Set([1]),
+                        years: new Set(["1996"])
+                    },
+                    {
+                        note: {
+                            label: "Bill Gates held the #1 spot for 18 years (non-continuous) and was overtaken by Jeff Bezos in 2017.",
+                            title: "Richest man in the world (at the time)",
+                            wrap: 190,
+                        },
+                        dy: 100,
+                        dx: -100,
+                        color: ["black"],
+                        ...annotationLocation("Bill Gates"),
+                        slides: new Set([1]),
+                        years: new Set(["2014"])
+                    },
+                    {
+                        note: {
+                            label: "These are brothers who inherited their dad's company",
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: -50,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Thomas and Raymond Kwok", .5),
+                        slides: new Set([1]),
+                        years: new Set(["1996", "2001", "2014"])
+                    },
+                    {
+                        note: {
+                            label: "The dad created FEMSA, primarily known for bottling Coca Cola in Mexico",
+                            title: "Two more brothers who inherited their dad's company",
+                            wrap: 190,
+                        },
+                        dy: -50,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Jose and Francisco Jose Calderon Rojas", .5),
+                        slides: new Set([1]),
+                        years: new Set(["1996", "2001", "2014"])
+                    },
+                    {
+                        note: {
+                            label: "Thank you Tom for contributing to UIUC and for funding my master's program through C3 AI",
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: -50,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Thomas Siebel", .5),
+                        slides: new Set([1]),
+                        years: new Set(["1996", "2001", "2014"])
+                    },
+                    {
+                        note: {
+                            label: "notably, only one person (martin hilti)'s wealth is more than half their country's gdp, indicating a world that is still mostly constrained to national prosperity for companies, i.e. the billionaires are not controlling a majority of the commercial activity in their country ",
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 50,
+                        dx: -100,
+                        color: ["black"],
+                        ...annotationLocation("Martin Hilti", .5),
+                        slides: new Set([3]),
+                        years: new Set(["1996"])
+                    },
+                    {
+                        note: {
+                            label: "The wealthiest woman for her age got it through inheritance just by owning walmart stock",
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 50,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Alice Walton", .5),
+                        slides: new Set([3]),
+                        years: new Set(["2001"])
+                    },
+                    {
+                        note: {
+                            label: "The wealthiest woman for her age got it through inheritance just by owning walmart stock",
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 50,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Christy Walton", .5),
+                        slides: new Set([3]),
+                        years: new Set(["2014"])
+                    },
+                    {
+                        note: {
+                            label: "The wealthiest woman for her age got it through inheritance just by owning walmart stock",
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 50,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Christy Walton", .5),
+                        slides: new Set([3]),
+                        years: new Set(["2014"])
+                    },
+                    {
+                        note: {
+                            label: `while the tech sector has certainly grown in the years since 1996 and 2001, 
+                                    of note is how many of the same consumer industries stayed at near the top, indicating the snowballing 
+                                    effect of wealth combined with the loosening regulations on profits in the energy sector with the 
+                                    explosion of fracking and subsequent boom in profits for a handful of energy-related companies such as Koch industries`,
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 150,
+                        dx: 50,
+                        color: ["black"],
+                        ...annotationLocation("David Koch", 1),
+                        slides: new Set([1]),
+                        years: new Set(["2014"])
+                    },
+                    {
+                        note: {
+                            label: `interestingly, we see more billionaires approaching their own country's gdp, possibly signifying a more internationalized business 
+                            (since if it was completely internal to the country, a wealth to gdp that is more than 1 would not be possible, and indeed one close to 1.0
+                             is unlikely if all business was done internal to the country)`,
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 100,
+                        dx: -100,
+                        color: ["black"],
+                        ...annotationLocation("Jacky Xu", 1),
+                        slides: new Set([2]),
+                        years: new Set(["2014"])
+                    },
+                    {
+                        note: {
+                            label: `Its refreshing to see that the top 9 billionaires relative to thier ages in 2014 did not inherit their wealth!`,
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 0,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Jeff Bezos", 1),
+                        slides: new Set([4]),
+                        years: new Set(["2014"])
+                    },
+                    {
+                        note: {
+                            label: `Even before 2014, there were at least 6 billionaires relative to thier ages who were founders of big companies`,
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: 0,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation(5, 1),
+                        slides: new Set([4]),
+                        years: new Set(["1996","2001"])
+                    },
+                    {
+                        note: {
+                            label: `Doris Fisher is the only woman on this list who did not inherit her wealth! `,
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: -50,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation("Doris Fisher", 1),
+                        slides: new Set([3,4]),
+                        years: new Set(["1996","2001", "2014"])
+                    },
+                    {...topNAnnotation(20), slides: new Set([2, 3])},
+                    {...topNAnnotation(150), slides: new Set([1, 2, 3, 4])},
+                    {...topNAnnotation(null, .5), slides: new Set([1, 2, 3, 4])},
+                    {...topNAnnotation(null, .9), slides: new Set([1, 2, 3, 4])},
+                    // {...topNAnnotation(null, 1), slides: new Set([1, 2, 3, 4])},
+                    {
+                        note: {
+                            label: `Even the ${ordinal(props.data.length)} person here has \$${tb(props.data[props.data.length -1]["wealth.worth in billions"]).toLocaleString()}!`,
+                            title: "",
+                            wrap: 190,
+                        },
+                        dy: -100,
+                        dx: 100,
+                        color: ["black"],
+                        ...annotationLocation(props.data.length - 1, 0),
+                        slides: new Set([1,2,3]),
+                        years: new Set(["1996", "2001", "2014"])
+                    }
+                ]
+                return annotations.filter((ann) => ann.slides.has(slide) && ann.years?.has(year));
+            }
+            function addSlideAnnotations(){
+                // remove old annotations if they are still there
+                d3.select('#svg1 > g.annotations').remove();
+                d3.select("#svg1")
+                    .append("g")
+                    .attr("class", "annotations")
+                    .call(d3.annotation().annotations(selectAnnotations(props.slide, props.filters.year)))
+            }
+
+            function transition(){
+                // sort/filter the underlying data according to the props
+                props.data = filterByProps(props.originalData, props.filters);
+                props.data = sortByProp(props.data, props.xAxis);
+                console.log(props);
+
+                // change variables in preparation for transition
+                // svg height needs to change because it depends on the number of billionaires
+                
+                var countUniqueNames = countUnique(props.data);
+                height = 20*countUniqueNames - margin.top - margin.bottom;
+                // axes
+                x.domain([0, 1.1*d3.max(props.data, (d)=> +d[props.xAxis])]);
+                y.domain(props.data.map((d) => d[props.yAxis])).range([0,height]);
+                // color
+                var colorKeys = uniqueByProp(props.data, props.colorBy);
+                console.log(colorKeys);
+                colorScale.domain(colorKeys);
+
+                // remove annotations
+                d3.select('#svg1 > g.annotations').remove();
+
+                // change the height on the svg
+                d3.select("#svg1")
+                    .attr("height", height + margin.top + margin.bottom)
+
+                // add the data to the rects
+                var mark = svg.selectAll("rect")
+                    .data(props.data)
+                
+                // add all new data
+                mark.enter().append("rect");
+
+                // move all rects
+                mark.transition().duration(1000)
+                    .attr("x", x(0))
+                    .attr("y", function(d) { return y(d[props.yAxis]); })
+                    .attr("width", function(d) { return x(d[props.xAxis]); })
+                    .attr("height", y.bandwidth())
+                    .attr("fill", (d) => colorScale(d[props.colorBy]))
+                    .style("opacity", 0.9)
+                    .end()
+                    .then(addSlideAnnotations)
+                
+                // remove rects that are no longer in the data
+                mark.exit()
+                    .transition()
+                    .remove()
+
+                // transition the legend squares
+                var mark2 = legend.selectAll("rect")
+                    .data(colorKeys)
+                mark2.enter().append("rect");
+                // transition legend
+                mark2.transition().duration(1000)
+                    .attr("width", legendRectSize)
+                    .attr("height", legendRectSize)
+                    .attr("x", 100)
+                    .attr("y", function(d,i){ return 100 + i*(legendRectSize+5)})
+                    .style("fill", function(d){ return colorScale(d)})
+                mark2.exit()
+                    .transition()
+                    .remove()
+
+                // transition the legend text
+                var mark3 = legend.selectAll("text")
+                    .data(colorKeys)
+                mark3.enter().append("text");
+                // Add one dot in the legend for each name.
+                mark3.transition().duration(1000)
+                    .attr("x", 100 + legendRectSize*1.2)
+                    .attr("y", function(d,i){ return 100 + i*(legendRectSize+5) + (legendRectSize/2)})
+                    .style("fill", function(d){ return colorScale(d)})
+                    .text(function(d){ return d})
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+                mark3.exit()
+                    .transition()
+                    .remove()
+
+                // transition axes
+                svg.select(".xaxis")
+                    .transition().duration(1000)
+                    .call(xAxis);
+                svg.select(".yaxis")
+                    .transition().duration(1000)
+                    .call(yAxis)
+
+                svg.select(".xAxisTitle")
+                    .text(props.xAxisTitle);
+
+                return true;
+            }
+            
+            function transitionToSlide(slide){
+                return switchParamsToSlide(slide) && transition();
+            }
+            function nextSlide(){
+                transitionToSlide(props.slide+1);
+            }
+            function prevSlide(){
+                transitionToSlide(props.slide-1);
+            }
+            d3.selectAll("input[name='year']").on("change", function(a){
+                props.filters.year = this.value;
+                transition();
+            });
+            props.nextSlide = nextSlide;
+            props.prevSlide = prevSlide;
+        })()
+    </script>
+
+    <style>
+        .tooltip {
+            position: absolute;
+            z-index: 100;
+            display: block;
+        }
+        .center{
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    <body>
+        <h1>UIUC CS 415 - Narrative Visualization - The Immense wealth of the world's billionaires</h1>
+        <h2>By Cameron Keenan</h2>
+        <p>
+            In recent years, billionaires have come under increasing scrutiny for hoarding their 
+            wealth. At the same time, they've built their wealth in industires that affect all aspects of our modern lives with which we can't live without.
+        </p>
+        <p>
+            Using data from the CORGIS Dataset Project, I wanted to show how the world's billionares made thier money,
+            how much they really have, where they are from, and much more. This way its a lot more approachable to interact
+            with this data for everyone to come to their own conclusions on our society that creates so many billionaires.
+        </p>
+        <div id="chart" style="position:relative">
+            <div class="btns">
+                <button onclick="props.nextSlide()" style="float: right">Next Slide</button>
+                <button onclick="props.prevSlide()"style="float: left">Previous Slide</button>
+                <div class="yearSelection">
+                    <!-- <label for="year">Select Year</label> -->
+                    <input type="radio" name="year" value="1996">1996
+                    <input type="radio" name="year" value="2001">2001
+                    <input type="radio" name="year" value="2014" checked>2014
+                </div>        
+            </div>
+            <svg id="svg1"></svg>
+            <div class="btns">
+                <button onclick="props.prevSlide()">Previous Slide</button>  
+                <button onclick="props.nextSlide()" style="float: right">Next Slide</button>
+            </div>
+        </div>
+
+    </body>
 </html>
