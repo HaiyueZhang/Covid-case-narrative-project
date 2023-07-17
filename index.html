@@ -42,6 +42,7 @@
       let xAxis = d3.axisBottom(xScale).ticks(6);
       let yAxis = d3.axisLeft(yScale);
       let parseDate = d3.timeParse("%Y-%m-%d");
+
       let line = d3
         .line()
         .x((d) => xScale(d.date))
@@ -116,7 +117,7 @@
         );
 
         xScale.domain(d3.extent(sceneData, (d) => d.date));
-        yScale.domain([0, d3.max(sceneData, (d) => d.cases)]);
+        yScale.domain([0, 90000]);
 
         // draw x-axis
         scenes[1]
@@ -202,6 +203,70 @@
           .on("mouseout", function () {
             tooltip.style("visibility", "hidden");
           });
+
+        // Add dialog box (a rectangle in SVG)
+        scenes[1]
+          .append("rect")
+          .attr("x", 490) // x position of the box, adjust as needed
+          .attr("y", 70) // y position of the box, adjust as needed
+          .attr("width", 500) // width of the box, adjust as needed
+          .attr("height", 80) // height of the box, adjust as needed
+          .style("fill", "#FFEFD5") // color of the box
+          .style("stroke", "black") // border color of the box
+          .style("stroke-width", 1); // border width of the box
+
+        // Add general annotation
+        scenes[1]
+          .append("text")
+          .attr("x", 500) // Adjust x position as needed
+          .attr("y", 100) // Adjust y position as needed
+          .style("font-size", "17px")
+          .style("fill", "black")
+          .html(
+            "During the first time period, the covid case is around 10000 and<tspan x='500' dy='1.2em'>shows a decreasing from 13909 to 2199 with several vibrations.</tspan>"
+          );
+
+        let vertexPoint = sceneData.find(
+          (d) => +d.date === +parseDate("2021-03-24")
+        );
+        let vertexX = xScale(vertexPoint.date);
+        let vertexY = yScale(vertexPoint.cases);
+
+        // Define the arrow marker
+        scenes[1]
+          .append("svg:defs")
+          .append("svg:marker")
+          .attr("id", "arrow")
+          .attr("refX", 6)
+          .attr("refY", 6)
+          .attr("markerWidth", 30)
+          .attr("markerHeight", 30)
+          .attr("orient", "auto")
+          .append("path")
+          .attr("d", "M 0 0 12 6 0 12 3 6")
+          .style("fill", "#000000");
+
+        // Add an arrow using line
+        scenes[1]
+          .append("line")
+          .attr("x1", vertexX - 10) // start of the line (arrow tail)
+          .attr("y1", vertexY - 40)
+          .attr("x2", vertexX) // end of the line (arrow head)
+          .attr("y2", vertexY)
+          .attr("stroke", "black")
+          .attr("stroke-width", 2)
+          .attr("marker-end");
+
+        // Add annotation
+        scenes[1]
+          .append("text")
+          .attr("x", vertexX - 175) // Adjust x position as needed
+          .attr("y", vertexY - 45) // Adjust y position as needed
+          .style("font-size", "16px")
+          .style("fill", "black")
+          .text(
+            "The new covid case reaches a vertex of 20184 on 2021-03-24 in the first period"
+          );
       }
 
       function createScene2() {
@@ -212,7 +277,7 @@
         );
 
         xScale.domain(d3.extent(sceneData, (d) => d.date));
-        yScale.domain([0, d3.max(sceneData, (d) => d.cases)]);
+        yScale.domain([0, 90000]);
 
         // draw x-axis
         scenes[2]
@@ -308,7 +373,7 @@
         );
 
         xScale.domain(d3.extent(sceneData, (d) => d.date));
-        yScale.domain([0, d3.max(sceneData, (d) => d.cases)]);
+        yScale.domain([0, 90000]);
 
         // draw x-axis
         scenes[3]
@@ -405,7 +470,7 @@
         );
 
         xScale.domain(d3.extent(sceneData, (d) => d.date));
-        yScale.domain([0, d3.max(sceneData, (d) => d.cases)]);
+        yScale.domain([0, 90000]);
 
         // draw x-axis
         scenes[4]
