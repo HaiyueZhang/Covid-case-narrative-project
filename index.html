@@ -6,35 +6,7 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://d3js.org/topojson.v3.min.js"></script>
     <script src="https://d3js.org/d3-annotation.v2.min.js"></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-      }
-      .scene {
-        margin-bottom: 2em;
-      }
-      .annotation-group text {
-        font-size: 0.8em;
-        fill: #333;
-      }
-      p {
-        margin-bottom: 2em;
-      }
-      .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 1em;
-        margin-bottom: 2em;
-      }
-      svg {
-        display: block;
-        margin: auto;
-      }
-      .dot {
-        fill: #ffab00;
-        stroke: #fff;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <h1>
@@ -74,6 +46,18 @@
         .line()
         .x((d) => xScale(d.date))
         .y((d) => yScale(d.cases));
+
+      let tooltip = d3
+        .select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .style("background", "white")
+        .style("border", "solid")
+        .style("border-width", "1px")
+        .style("border-radius", "5px")
+        .style("padding", "10px");
 
       let svg = d3
         .select("#scene-1")
@@ -184,7 +168,7 @@
           .style("font-size", "20px")
           .style("text-decoration", "underline")
           .text(
-            "Cumulative Covid-19 cases in New York from 2021-01-23 to 2021-05-01"
+            "New reported cases by day in New York from 2021-01-23 to 2021-05-01"
           );
 
         // draw dot
@@ -200,7 +184,24 @@
           .attr("cy", function (d) {
             return yScale(d.cases);
           })
-          .attr("r", 5);
+          .attr("r", 5)
+          .on("mouseover", function (event, d) {
+            tooltip
+              .html(
+                `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
+                  d.cases
+                }`
+              )
+              .style("visibility", "visible");
+          })
+          .on("mousemove", function (event) {
+            tooltip
+              .style("top", d3.pointer(event, this)[1] + 160 + "px")
+              .style("left", d3.pointer(event, this)[0] + 100 + "px");
+          })
+          .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+          });
       }
 
       function createScene2() {
@@ -260,11 +261,43 @@
           .attr("x", width / 2)
           .attr("y", margin.top / 2)
           .attr("text-anchor", "middle")
-          .style("font-size", "16px")
+          .style("font-size", "20px")
           .style("text-decoration", "underline")
           .text(
-            "Cumulative Covid-19 cases in New York from 2021-05-02 to 2021-08-08"
+            "New reported cases by day in New York from 2021-05-02 to 2021-08-08"
           );
+
+        // draw dot
+        scenes[2]
+          .selectAll(".dot")
+          .data(sceneData)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", function (d) {
+            return xScale(d.date);
+          })
+          .attr("cy", function (d) {
+            return yScale(d.cases);
+          })
+          .attr("r", 5)
+          .on("mouseover", function (event, d) {
+            tooltip
+              .html(
+                `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
+                  d.cases
+                }`
+              )
+              .style("visibility", "visible");
+          })
+          .on("mousemove", function (event) {
+            tooltip
+              .style("top", d3.pointer(event, this)[1] + 160 + "px")
+              .style("left", d3.pointer(event, this)[0] + 100 + "px");
+          })
+          .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+          });
       }
 
       function createScene3() {
@@ -324,11 +357,43 @@
           .attr("x", width / 2)
           .attr("y", margin.top / 2)
           .attr("text-anchor", "middle")
-          .style("font-size", "16px")
+          .style("font-size", "20px")
           .style("text-decoration", "underline")
           .text(
-            "Cumulative Covid-19 cases in New York from 2021-08-09 to 2021-11-15"
+            "New reported cases by day in New York from 2021-08-09 to 2021-11-15"
           );
+
+        // draw dot
+        scenes[3]
+          .selectAll(".dot")
+          .data(sceneData)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", function (d) {
+            return xScale(d.date);
+          })
+          .attr("cy", function (d) {
+            return yScale(d.cases);
+          })
+          .attr("r", 5)
+          .on("mouseover", function (event, d) {
+            tooltip
+              .html(
+                `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
+                  d.cases
+                }`
+              )
+              .style("visibility", "visible");
+          })
+          .on("mousemove", function (event) {
+            tooltip
+              .style("top", d3.pointer(event, this)[1] + 160 + "px")
+              .style("left", d3.pointer(event, this)[0] + 100 + "px");
+          })
+          .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+          });
       }
 
       function createScene4() {
@@ -389,11 +454,43 @@
           .attr("x", width / 2)
           .attr("y", margin.top / 2)
           .attr("text-anchor", "middle")
-          .style("font-size", "16px")
+          .style("font-size", "20px")
           .style("text-decoration", "underline")
           .text(
-            "Cumulative Covid-19 cases in New York from 2021-11-16 to 2022-02-23"
+            "New reported cases by day in New York from 2021-11-16 to 2022-02-23"
           );
+
+        // draw dot
+        scenes[4]
+          .selectAll(".dot")
+          .data(sceneData)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", function (d) {
+            return xScale(d.date);
+          })
+          .attr("cy", function (d) {
+            return yScale(d.cases);
+          })
+          .attr("r", 5)
+          .on("mouseover", function (event, d) {
+            tooltip
+              .html(
+                `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
+                  d.cases
+                }`
+              )
+              .style("visibility", "visible");
+          })
+          .on("mousemove", function (event) {
+            tooltip
+              .style("top", d3.pointer(event, this)[1] + 160 + "px")
+              .style("left", d3.pointer(event, this)[0] + 100 + "px");
+          })
+          .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+          });
       }
 
       // Add an event listener to the buttons
