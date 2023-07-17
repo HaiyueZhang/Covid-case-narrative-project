@@ -65,7 +65,7 @@
         .attr("width", width)
         .attr("height", height);
 
-      d3.csv("/Covid-case-narrative-project/data/new-york-data.csv", (d) => {
+      d3.csv("/data/new-york-data.csv", (d) => {
         console.log(d);
         return {
           date: parseDate(d.date),
