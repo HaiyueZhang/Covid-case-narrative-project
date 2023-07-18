@@ -10,22 +10,27 @@
   </head>
   <body>
     <h1>
-      UIUC CS 416 - Narrative Visualization - The covid cases and deaths in New
-      York
+      UIUC CS 416 - Narrative Visualization - The Covid-19 cases in New York
     </h1>
     <h2>By Haiyue Zhang</h2>
     <p>
-      My project displays maps of Covid-19 cases and deaths in New York, along
-      with a cumulative line chart showing both Covid-19 cases and deaths over
-      time. This visualization allows us to observe the trends from 2021 to
-      2022.
+      My narrative visualization project displays the line chart of Covid-19
+      cases in New York from 2021-01-23 to 2022-02-23. This period exhibits
+      significant fluctuations, which allows us to observe the trends and
+      changes during this period.
+    </p>
+    <p>
+      Here are five scenes. To be specific, four of them represent different
+      time intervals, each showcasing distinct trend types, and the fifth scene
+      provides an overview of the entire period.
     </p>
     <div class="buttons">
       <!-- Add a container for the buttons and apply the buttons class here -->
-      <button id="button1">2021-01-23 to 2021-05-01</button>
-      <button id="button2">2021-05-02 to 2021-08-08</button>
-      <button id="button3">2021-08-09 to 2021-11-15</button>
-      <button id="button4">2021-11-16 to 2022-02-23</button>
+      <button id="button1">Scene 1: Recession</button>
+      <button id="button2">Scene 2: Plateau(Trough)</button>
+      <button id="button3">Scene 3: Fluctuating</button>
+      <button id="button4">Scene 4: Exponential Growth(Peak)</button>
+      <button id="button5">Entire Line Chart</button>
     </div>
     <div id="scene-1" class="scene"></div>
     <div id="scene-2" class="scene"></div>
@@ -85,6 +90,7 @@
         scenes[2] = svg.append("g").attr("opacity", 0);
         scenes[3] = svg.append("g").attr("opacity", 0);
         scenes[4] = svg.append("g").attr("opacity", 0);
+        scenes[5] = svg.append("g").attr("opacity", 0);
 
         // Scene 1
         createScene1();
@@ -97,6 +103,9 @@
 
         // Scene 4
         createScene4();
+
+        // Scene 5
+        createScene5();
       }
 
       function showScene(sceneNum) {
@@ -187,6 +196,8 @@
           })
           .attr("r", 5)
           .on("mouseover", function (event, d) {
+            // Add stroke around dot on hover
+            d3.select(this).attr("stroke-width", 2).attr("r", 7); // Increase the radius here
             tooltip
               .html(
                 `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
@@ -201,6 +212,10 @@
               .style("left", d3.pointer(event, this)[0] + 80 + "px");
           })
           .on("mouseout", function () {
+            d3.select(this)
+              .attr("stroke", null)
+              .attr("stroke-width", null)
+              .attr("r", 5); // Restore the original radius here
             tooltip.style("visibility", "hidden");
           });
 
@@ -209,8 +224,8 @@
           .append("rect")
           .attr("x", 490) // x position of the box, adjust as needed
           .attr("y", 70) // y position of the box, adjust as needed
-          .attr("width", 500) // width of the box, adjust as needed
-          .attr("height", 80) // height of the box, adjust as needed
+          .attr("width", 540) // width of the box, adjust as needed
+          .attr("height", 105) // height of the box, adjust as needed
           .style("fill", "#FFEFD5") // color of the box
           .style("stroke", "black") // border color of the box
           .style("stroke-width", 1); // border width of the box
@@ -219,11 +234,11 @@
         scenes[1]
           .append("text")
           .attr("x", 500) // Adjust x position as needed
-          .attr("y", 100) // Adjust y position as needed
-          .style("font-size", "17px")
+          .attr("y", 90) // Adjust y position as needed
+          .style("font-size", "16px")
           .style("fill", "black")
           .html(
-            "During the first time period, the covid case is around 10000 and<tspan x='500' dy='1.2em'>shows a decreasing from 13909 to 2199 with several vibrations.</tspan>"
+            "During the first time period, the line chart of new reported case shows</tspan> <tspan x='500' dy='1.2em'>a recession, which decreases from 13909 to 2199 with several vibrations.<tspan x='500' dy='1.2em'>State Government Response: On February 10, 2021, Large capacity</tspan> <tspan x='500' dy='1.2em'>areas reopen at 10% capacity, effective February 24, with a negative PCR</tspan> <tspan x='500' dy='1.2em'>test within 72 hours or full COVID-19 vaccination status required to attend.</tspan>"
           );
 
         let vertexPoint = sceneData.find(
@@ -347,6 +362,8 @@
           })
           .attr("r", 5)
           .on("mouseover", function (event, d) {
+            // Add stroke around dot on hover
+            d3.select(this).attr("stroke-width", 2).attr("r", 7); // Increase the radius here
             tooltip
               .html(
                 `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
@@ -358,9 +375,13 @@
           .on("mousemove", function (event) {
             tooltip
               .style("top", d3.pointer(event, this)[1] + 160 + "px")
-              .style("left", d3.pointer(event, this)[0] + 100 + "px");
+              .style("left", d3.pointer(event, this)[0] + 80 + "px");
           })
           .on("mouseout", function () {
+            d3.select(this)
+              .attr("stroke", null)
+              .attr("stroke-width", null)
+              .attr("r", 5); // Restore the original radius here
             tooltip.style("visibility", "hidden");
           });
       }
@@ -443,6 +464,8 @@
           })
           .attr("r", 5)
           .on("mouseover", function (event, d) {
+            // Add stroke around dot on hover
+            d3.select(this).attr("stroke-width", 2).attr("r", 7); // Increase the radius here
             tooltip
               .html(
                 `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
@@ -454,9 +477,13 @@
           .on("mousemove", function (event) {
             tooltip
               .style("top", d3.pointer(event, this)[1] + 160 + "px")
-              .style("left", d3.pointer(event, this)[0] + 100 + "px");
+              .style("left", d3.pointer(event, this)[0] + 80 + "px");
           })
           .on("mouseout", function () {
+            d3.select(this)
+              .attr("stroke", null)
+              .attr("stroke-width", null)
+              .attr("r", 5); // Restore the original radius here
             tooltip.style("visibility", "hidden");
           });
       }
@@ -540,6 +567,8 @@
           })
           .attr("r", 5)
           .on("mouseover", function (event, d) {
+            // Add stroke around dot on hover
+            d3.select(this).attr("stroke-width", 2).attr("r", 7); // Increase the radius here
             tooltip
               .html(
                 `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
@@ -551,9 +580,116 @@
           .on("mousemove", function (event) {
             tooltip
               .style("top", d3.pointer(event, this)[1] + 160 + "px")
-              .style("left", d3.pointer(event, this)[0] + 100 + "px");
+              .style("left", d3.pointer(event, this)[0] + 80 + "px");
           })
           .on("mouseout", function () {
+            d3.select(this)
+              .attr("stroke", null)
+              .attr("stroke-width", null)
+              .attr("r", 5); // Restore the original radius here
+            tooltip.style("visibility", "hidden");
+          });
+      }
+
+      function createScene5() {
+        // Filter the data for the time period of this scene
+        let sceneData = data.filter(
+          (d) =>
+            d.date >= parseDate("2021-01-23") &&
+            d.date <= parseDate("2022-02-23")
+        );
+
+        xScale.domain(d3.extent(sceneData, (d) => d.date));
+        yScale.domain([0, 90000]);
+
+        // draw x-axis
+        scenes[5]
+          .append("g")
+          .attr("transform", `translate(0,${height - margin.bottom})`)
+          .call(xAxis);
+
+        // Add label for the x-axis
+        scenes[5]
+          .append("text")
+          .attr(
+            "transform",
+            `translate(${width / 2}, ${height - margin.bottom + 40})`
+          )
+          .style("text-anchor", "middle")
+          .text("Date");
+
+        // draw y-axis
+        scenes[5]
+          .append("g")
+          .attr("transform", `translate(${margin.left},0)`)
+          .call(yAxis);
+
+        // Add label for the y-axis
+        scenes[5]
+          .append("text")
+          .attr(
+            "transform",
+            `translate(${margin.left / 2},${height / 2}) rotate(-90)`
+          ) // Adjust the label position
+          .style("text-anchor", "middle")
+          .text("Cases");
+
+        // draw line
+        scenes[5]
+          .append("path")
+          .datum(sceneData)
+          .attr("fill", "none")
+          .attr("stroke", "red")
+          .attr("stroke-width", 1.5)
+          .attr("d", line);
+
+        // draw title
+        scenes[5]
+          .append("text")
+          .attr("x", width / 2)
+          .attr("y", margin.top / 2)
+          .attr("text-anchor", "middle")
+          .style("font-size", "20px")
+          .style("text-decoration", "underline")
+          .text(
+            "New reported cases by day in New York from 2021-01-23 to 2022-02-23"
+          );
+
+        // draw dot
+        scenes[5]
+          .selectAll(".dot")
+          .data(sceneData)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", function (d) {
+            return xScale(d.date);
+          })
+          .attr("cy", function (d) {
+            return yScale(d.cases);
+          })
+          .attr("r", 5)
+          .on("mouseover", function (event, d) {
+            // Add stroke around dot on hover
+            d3.select(this).attr("stroke-width", 2).attr("r", 7); // Increase the radius here
+            tooltip
+              .html(
+                `Date: ${d3.timeFormat("%Y-%m-%d")(d.date)}<br/>Cases: ${
+                  d.cases
+                }`
+              )
+              .style("visibility", "visible");
+          })
+          .on("mousemove", function (event) {
+            tooltip
+              .style("top", d3.pointer(event, this)[1] + 160 + "px")
+              .style("left", d3.pointer(event, this)[0] + 80 + "px");
+          })
+          .on("mouseout", function () {
+            d3.select(this)
+              .attr("stroke", null)
+              .attr("stroke-width", null)
+              .attr("r", 5); // Restore the original radius here
             tooltip.style("visibility", "hidden");
           });
       }
@@ -573,6 +709,10 @@
 
       d3.select("#button4").on("click", function () {
         showScene(4);
+      });
+
+      d3.select("#button5").on("click", function () {
+        showScene(5);
       });
     </script>
   </body>
