@@ -183,7 +183,7 @@ function createScene1() {
     .append("rect")
     .attr("x", 490) // x position of the box, adjust as needed
     .attr("y", 70) // y position of the box, adjust as needed
-    .attr("width", 540) // width of the box, adjust as needed
+    .attr("width", 560) // width of the box, adjust as needed
     .attr("height", 105) // height of the box, adjust as needed
     .style("fill", "#FFEFD5") // color of the box
     .style("stroke", "black") // border color of the box
@@ -197,7 +197,11 @@ function createScene1() {
     .style("font-size", "16px")
     .style("fill", "black")
     .html(
-      "During the first time period, the line chart of new reported case shows</tspan> <tspan x='500' dy='1.2em'>a recession, which decreases from 13909 to 2199 with several vibrations.<tspan x='500' dy='1.2em'>State Government Response: On February 10, 2021, Large capacity</tspan> <tspan x='500' dy='1.2em'>areas reopen at 10% capacity, effective February 24, with a negative PCR</tspan> <tspan x='500' dy='1.2em'>test within 72 hours or full COVID-19 vaccination status required to attend.</tspan>"
+      `During the first time period, the line chart of new reported case shows
+      <tspan x='500' dy='1.2em'>recession trend, which decreases from 13909 to 2199 with several vibrations.</tspan>
+      <tspan x='500' dy='1.2em'>State Government Response: On February 10, 2021, Large capacity</tspan>
+      <tspan x='500' dy='1.2em'>areas reopen at 10% capacity, effective February 24, with a negative PCR</tspan>
+      <tspan x='500' dy='1.2em'>test within 72 hours or full COVID-19 vaccination status required to attend.</tspan>`
     );
 
   let vertexPoint = sceneData.find((d) => +d.date === +parseDate("2021-03-24"));
@@ -338,6 +342,32 @@ function createScene2() {
         .attr("r", 5); // Restore the original radius here
       tooltip.style("visibility", "hidden");
     });
+
+  // Add dialog box (a rectangle in SVG)
+  scenes[2]
+    .append("rect")
+    .attr("x", 490) // x position of the box, adjust as needed
+    .attr("y", 70) // y position of the box, adjust as needed
+    .attr("width", 560) // width of the box, adjust as needed
+    .attr("height", 105) // height of the box, adjust as needed
+    .style("fill", "#FFEFD5") // color of the box
+    .style("stroke", "black") // border color of the box
+    .style("stroke-width", 1); // border width of the box
+
+  // Add general annotation
+  scenes[2]
+    .append("text")
+    .attr("x", 500) // Adjust x position as needed
+    .attr("y", 90) // Adjust y position as needed
+    .style("font-size", "16px")
+    .style("fill", "black")
+    .html(
+      `During the second time period, the line chart of new reported case shows
+      <tspan x='500' dy='1.2em'>plateau trend, which is around 1500.</tspan>
+      <tspan x='500' dy='1.2em'>State Government Response: On June 13, 2021, All capacity restrictions</tspan> 
+      <tspan x='500' dy='1.2em'>lifted due to 70% of NYers getting at least one shot of the COVID-19 vaccine.</tspan> 
+      <tspan x='500' dy='1.2em'>On June 24, 2021, State of Emergency expires.</tspan>`
+    );
 }
 
 function createScene3() {
@@ -437,6 +467,33 @@ function createScene3() {
         .attr("r", 5); // Restore the original radius here
       tooltip.style("visibility", "hidden");
     });
+
+  // Add dialog box (a rectangle in SVG)
+  scenes[3]
+    .append("rect")
+    .attr("x", 490) // x position of the box, adjust as needed
+    .attr("y", 70) // y position of the box, adjust as needed
+    .attr("width", 560) // width of the box, adjust as needed
+    .attr("height", 125) // height of the box, adjust as needed
+    .style("fill", "#FFEFD5") // color of the box
+    .style("stroke", "black") // border color of the box
+    .style("stroke-width", 1); // border width of the box
+
+  // Add general annotation
+  scenes[3]
+    .append("text")
+    .attr("x", 500) // Adjust x position as needed
+    .attr("y", 90) // Adjust y position as needed
+    .style("font-size", "16px")
+    .style("fill", "black")
+    .html(
+      `During the second time period, the line chart of new reported case shows
+    <tspan x='500' dy='1.2em'>fluctuating trend, which vibrates from 2500 to 7500.</tspan>
+    <tspan x='500' dy='1.2em'>State Government Response: On August 27, 2021, Gov. Hochul and the New</tspan> 
+    <tspan x='500' dy='1.2em'>York State Department of Health institute a universal mask mandate for </tspan> 
+    <tspan x='500' dy='1.2em'>all public and private schools for students, staff, and faculty in </tspan>
+    <tspan x='500' dy='1.2em'>response to the emerging Delta variant. </tspan>`
+    );
 }
 
 function createScene4() {
