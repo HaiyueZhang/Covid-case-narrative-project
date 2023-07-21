@@ -218,8 +218,8 @@ function createScene1() {
     .style("font-size", "16px")
     .style("fill", "black")
     .html(
-      `During the first time period, the line chart of new reported case shows
-      <tspan x='500' dy='1.2em'>recession trend, which decreases from 13909 to 2199 with several vibrations.</tspan>
+      `During the first time period, the line chart of new reported case showed
+      <tspan x='500' dy='1.2em'>recession trend, which decreased from 13909 to 2199 with several vibrations.</tspan>
       <tspan x='500' dy='1.2em'>State Government Response: On February 10, 2021, Large capacity</tspan>
       <tspan x='500' dy='1.2em'>areas reopen at 10% capacity, effective February 24, with a negative PCR</tspan>
       <tspan x='500' dy='1.2em'>test within 72 hours or full COVID-19 vaccination status required to attend.</tspan>`
@@ -386,8 +386,8 @@ function createScene2() {
     .style("font-size", "16px")
     .style("fill", "black")
     .html(
-      `During the second time period, the line chart of new reported case shows
-      <tspan x='500' dy='1.2em'>plateau trend, which is around 1500.</tspan>
+      `During the second time period, the line chart of new reported case showed
+      <tspan x='500' dy='1.2em'>plateau trend, which is around number of 800.</tspan>
       <tspan x='500' dy='1.2em'>State Government Response: On June 13, 2021, All capacity restrictions</tspan> 
       <tspan x='500' dy='1.2em'>lifted due to 70% of NYers getting at least one shot of the COVID-19 vaccine.</tspan> 
       <tspan x='500' dy='1.2em'>On June 24, 2021, State of Emergency expires.</tspan>`
@@ -555,11 +555,11 @@ function createScene3() {
     .style("fill", "black")
     .html(
       `During the third time period, the line chart of new reported case shows
-    <tspan x='500' dy='1.2em'>fluctuating trend, which vibrates from 2500 to 7500.</tspan>
+    <tspan x='500' dy='1.2em'>fluctuating trend, which vibrated in a range from 2500 to 7500.</tspan>
     <tspan x='500' dy='1.2em'>State Government Response: On August 27, 2021, Gov. Hochul and the New</tspan> 
-    <tspan x='500' dy='1.2em'>York State Department of Health institute a universal mask mandate for </tspan> 
-    <tspan x='500' dy='1.2em'>all public and private schools for students, staff, and faculty in </tspan>
-    <tspan x='500' dy='1.2em'>response to the emerging Delta variant. </tspan>`
+    <tspan x='500' dy='1.2em'>York State Department of Health institute a universal mask mandate for all</tspan> 
+    <tspan x='500' dy='1.2em'>public and private schools for students, staff, and faculty in response to the</tspan>
+    <tspan x='500' dy='1.2em'>emerging Delta variant. </tspan>`
     );
 }
 
@@ -682,9 +682,9 @@ function createScene4() {
     .style("fill", "black")
     .html(
       `During the fourth time period, the line chart of 
-  <tspan x='150' dy='1.2em'>new reported case shows surge, peak point,</tspan>
-  <tspan x='150' dy='1.2em'>and plummeting. The whole trend graph is same</tspan>
-  <tspan x='150' dy='1.2em'>as a normal distirbution.</tspan> 
+  <tspan x='150' dy='1.2em'>new reported case showed surge, peak point,</tspan>
+  <tspan x='150' dy='1.2em'>and plummeting. The whole trend graph was</tspan>
+  <tspan x='150' dy='1.2em'>same as a normal distirbution.</tspan> 
   <tspan x='150' dy='1.2em'>State Government Response: On November 27,</tspan>
   <tspan x='150' dy='1.2em'>2021, A new pre-emptive State of Emergency is</tspan>
   <tspan x='150' dy='1.2em'>declared over Omicron variant.</tspan>`
