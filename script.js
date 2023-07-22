@@ -859,7 +859,7 @@ function createScene5() {
   // Color function
   const colorScale = d3
     .scaleOrdinal()
-    .domain(["Recession", "Plateau", "Fluctuating", "Surge, Plummeting"])
+    .domain(["Recession", "Plateau", "Fluctuating", "Peak"])
     .range(["#d73027", "#1CBC23", "#FFD850", "#0094FF"]); // adjust colors as needed
 
   // Segments' boundaries
@@ -875,7 +875,7 @@ function createScene5() {
     if (date < boundaries[0]) return "Recession";
     if (date < boundaries[1]) return "Plateau";
     if (date < boundaries[2]) return "Fluctuating";
-    return "Surge, Plummeting";
+    return "Peak";
   }
 
   // Add the line
@@ -902,7 +902,7 @@ function createScene5() {
     .attr("font-size", 10)
     .attr("text-anchor", "start")
     .selectAll("g")
-    .data(["Recession", "Plateau", "Fluctuating", "Surge, Plummeting"])
+    .data(["Recession", "Plateau", "Fluctuating", "Peak"])
     .enter()
     .append("g")
     .attr("transform", function (d, i) {
