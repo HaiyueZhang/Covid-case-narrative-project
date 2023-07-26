@@ -1,10 +1,10 @@
-# The Covid Case in New York
+# <b>The Covid Case in New York</b>
 
-## Messaging
+## <b>Messaging</b>
 
 - I want to show the line chart visualizaton of reported new covid-19 case in New York from 2021-01-23 to 2022-02-23. This period exhibits significant fluctuations on the number of new covid case, which allows us to observe the trends during this period and find the relationship between government responses and changes on new covid case.
 
-## Narrative Structure
+## <b>Narrative Structure</b>
 
 - My narrative visualization follows the structure of an "Interactive Slideshow."
 
@@ -12,7 +12,7 @@
 
 - Viewers are allowed to explore each scene as they can choose which scene to view and when to view it by using buttons. Within each scene, interactive elements, dots on line charts from scene 1 to scene 4, allow viewers to hover over to get more detailed information. This offers an additional level of viewer-directed exploration within each step of the story.
 
-## Visual Structure
+## <b>Visual Structure</b>
 
 - Each scene contains line chart, tooltips and dots, annotations, arrow marker, title and axis labels and transition buttons
 
@@ -24,41 +24,46 @@
 
 - <b>Arrow Marker:</b> The arrow marker points to the vertex point of the cases, reinforcing the specific annotation and guiding the viewer's attention to this important point.
 
-- <b>Title and Axis Labels:</b> The title gives a brief description of what the chart is about and which time period this chart shows, and the axis labels indicate what each axis represents.
+- <b>Title and Axis Labels:</b> The title gives a brief description of what the chart is about and which time period this chart shows, and the axis labels(Cases and Date) indicate what each axis represents.
 
-- <b>Transition buttons:</b> Viewers can click buttons on the top of each scene to switch to any other scenes they like, which is easy for the viewer to understand how the data connects across different scenes. The viewer will be able to observe how the trend of COVID-19 cases changes over different time periods and in response to different government actions.
+- <b>Transition buttons:</b> Viewers can click buttons on the top of each scene to switch to any other scenes they like, which is easy for the viewer to understand how the data connects across different scenes. The viewer will be able to observe how the trend of COVID-19 cases changes over different time periods.
 
-## Scenes
+## <b>Scenes</b>
 
 - There are five scenes in my narrative visualization. Specifically, four of them progress chronologically through different time periods, each scene showing the trend( <b>Recession</b>, <b>Plateau</b>, <b>Fluctuating</b>, and <b>Peak</b>) of reported new COVID-19 cases in New York during a specific time frame. And the fifth scene provides an overview of the <b>entire</b> period.
 
-- The ordering of the scenes would then logically follow the progression of time. The purpose of this would be to clearly depict the chronological order of events and to demonstrate how earlier events might have influenced later trends. This way, the viewer can understand the cause-and-effect relationship between different actions (like government mandates) and the resulting changes in COVID-19 case counts.
+- The ordering of the scenes would then logically follow the progression of time. The purpose of this would be to clearly depict the chronological order of events and to demonstrate how earlier events might have influenced later trends.
 
-## Annotations
+- Furthermore, I first present the four scenes corresponding to specific time periods, which allows viewers to observe detailed changes in COVID-19 case numbers. Following these, I display the fifth scene, a line chart representing the entire period, which merges the previous four scenes. This approach ensures viewers gain a comprehensive understanding of the COVID-19 case trend.
 
-- The general summary annotation follows a template that explains overall trends and notable events during the displayed time period. It's contained within a rectangular box and provides context to the data being visualized. It starts with an overview of the trends (increasing or decreasing number of cases), then gives specific government responses tied to those trends. The location, size, and placement of the annotation box, as well as the structured and detailed content of the annotation, follows a descriptive and explanatory template. The aim is to provide relevant context and enhance the viewers' understanding of the scene.
+## <b>Annotations</b>
 
-- Specific point annotation is used to draw attention to a crucial data point or an event in the time period. In the given code, an arrow points to the peak number of reported cases, with an annotation providing the exact date and number of cases. This annotation follows a concise, informative template and helps to underline a significant event.
+- The templates of annotations, including both <b>general</b> and <b>specific</b>.
 
-- The annotations can change within a single scene, especially for the tooltips used in the line chart. When the viewer hovers over a dot, the dot becomes larger and a tooltip appears showing the exact date and number of cases. Dynamic annotations can provide additional information and context about specific data points or regions of the chart that the viewer is interested in.
+- Containing within a rectangular box, the general summary annotation follows a template that explains overall trends and notable events during the displayed time period, which starts with an overview of the trends and provides specific government responses tied to those trends. The aim of general annotations is to provide relevant context and enhance the viewers' understanding of the scene.
+
+- Specific point annotation is used to draw attention to a crucial data point or an event in the time period. By using an arrow points to the peak or trough number of reported cases, with an annotation providing the exact date, number of cases, and supportive information. This annotation follows a concise, informative template and helps viewers to underline a significant event.
 
 - Both types of annotations support the messaging by offering necessary context and focus, aiding in the interpretation of data, and emphasizing important points or events. They guide the viewers' attention to what matters most in the data and enhance the storytelling aspect of the visualization.
 
-## Parameters
+- Also, the annotations can change within a single scene, especially for the tooltips used in the line chart. When the viewer hovers over a dot, the dot becomes larger and a tooltip appears showing the exact date and number of cases. Dynamic annotations can provide additional information and context about specific data points or regions of the chart that the viewer is interested in.
+
+## <b>Parameters</b>
 
 - The Parameters in my narrative visualization
 
-  - Time period: The data is filtered by specific dates.
-  - X and Y scales: The scales for the axes are set based on the data.
-  - Data points: Each point represents a specific day's COVID-19 case count.
-  - Annotations: Annotations include tooltips, general statements, and special highlights.
-  - Transition buttons: Transitions between scenes.
+  - <b>Time period:</b> The data is filtered by specific dates, which is a primary factor in defining each scene or state. By filtering the data based on specific dates, each scene represents a distinct time period, revealing the trend of COVID-19 cases within that period.
+  - <b>Date and Case scales:</b> The scales for the axes are set based on the data. These scales are adjusted for each scene based on the range of dates and case numbers within the specific time period. This not only provides an accurate visual representation of the data but also allows for a more precise comparison between different time periods.
+  - <b>Data points:</b> Each point represents a specific day's COVID-19 case count. The collection of these points over a given time period forms the trend line for each scene.
+  - <b>Annotations:</b> Annotations include tooltips, general statements, and special highlights. For each scene, annotations are meticulously crafted to include tooltips, general statements, and special highlights that provide additional context and help guide the viewer's understanding of the data. The content and placement of these annotations are tailored to highlight the important events or phenomena within each time period.
+  - <b>Colors:</b> Each color represents a specific time period. The use of distinct colors for each time period is another way of defining states and scenes. These colors visually differentiate each scene in the comprehensive line chart, helping the viewer to relate the segmented data to the overall trend.
+  - <b>Transition buttons:</b> Transitions between scenes. These buttons are essential interactive elements that enable viewers to navigate between different scenes. The state transitions are thus directly linked to these user actions, adding a dynamic aspect to the narrative.
 
-- In my narrative visualization, each scene represents a different state. These states are defined by the time period and the related COVID-19 case data for that time period. The parameters (time, case counts, annotations, and transitions) are adjusted for each scene to reflect the data and story for that specific time period.
+- In my narrative visualization, each scene represents a different state. These states are defined by the time period and the related COVID-19 case data. The parameters (time, case counts, annotations, colors, and transitions) are adjusted for each scene to reflect the data and story for that specific time period.
 
 - The changes in the state from one scene to the next represent the evolution of the narrative, guided by the parameters, and this gives your viewers a dynamic and engaging storytelling experience.
 
-## Triggers
+## <b>Triggers</b>
 
 - Mouseover on dots: When the user hovers over a dot, this triggers a state change where the dot's size increases and a stroke is added around it. Additionally, a tooltip becomes visible, displaying the date and number of cases for the hovered dot. This makes the interaction more engaging and provides detailed information about specific data points.
 - Mousemove on dots: When the user moves the mouse while over a dot, the position of the tooltip changes accordingly. This keeps the tooltip close to the user's cursor and the data point they are currently focusing on.
@@ -66,7 +71,7 @@
 
 - As for affordances, they are clues or indicators that suggest the functionality or possibilities of interaction to the user. In your visualization:
 
-  - Dots: The presence of dots on the line graph serves as an affordance, indicating that these points are interactive.
-  - Cursor changes: When the cursor changes upon hovering over a dot (typically to a hand pointer), it suggests to the user that an interaction (like clicking or dragging) is possible.
-  - Tooltip: The appearance of a tooltip on hovering over a dot gives the user information about what that dot represents, providing an immediate understanding of the affordance.
-  - Visual cues: The visual elements like the axes, labels, and annotations guide the user's attention and understanding, suggesting areas of interest or points of focus.
+  - <b>Dots:</b> The presence of dots on the line graph serves as an affordance, indicating that these points are interactive.
+  - <b>Cursor changes:</b> When the cursor changes upon hovering over a dot (typically to a hand pointer), it suggests to the user that an interaction (like clicking or dragging) is possible.
+  - <b>Tooltip:</b> The appearance of a tooltip on hovering over a dot gives the user information about what that dot represents, providing an immediate understanding of the affordance.
+  - <b>Visual cues:</b> The visual elements like the axes, labels, and annotations guide the user's attention and understanding, suggesting areas of interest or points of focus.
