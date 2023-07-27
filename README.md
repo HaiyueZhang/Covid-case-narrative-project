@@ -20,7 +20,7 @@
 
 - <b>Tooltips and Dots:</b> The dots on the line represent individual data points for each day. When the viewer hovers over a dot, the dot becomes larger and a tooltip appears showing the exact date and number of cases. This interactive feature enables the viewer to engage with and explore the data in more detail.
 
-- <b>Annotations:</b> Annotations, including both general and specific, are used to highlight the important parts of the data. The general annotation provides a summary of what's happening during this period, and the specific annotation highlights a key data point (vertex point). This not only attracts the viewer's attention to the crucial points, but also adds context and interpretation to the raw numbers.
+- <b>Annotations:</b> Annotations, including general and specific, are used to highlight the important parts of the data. The general annotation provides a summary of what's happening during this period, and the specific annotation highlights a key data point (vertex point). This not only attracts the viewer's attention to the crucial points, but also adds context and interpretation to the raw numbers.
 
 - <b>Arrow Marker:</b> The arrow marker points to the vertex point of the cases, reinforcing the specific annotation and guiding the viewer's attention to this important point.
 
@@ -38,7 +38,7 @@
 
 ## <b>Annotations</b>
 
-- The templates of annotations, including both <b>general</b> and <b>specific</b>.
+- The templates of annotations, including both <b>general</b> and <b>specific</b>. Also, <b>tooltips</b> is a part of annotations.
 
 - Containing within a rectangular box, the general summary annotation follows a template that explains overall trends and notable events during the displayed time period, which starts with an overview of the trends and provides specific government responses tied to those trends. The aim of general annotations is to provide relevant context and enhance the viewers' understanding of the scene.
 
@@ -52,26 +52,28 @@
 
 - The Parameters in my narrative visualization
 
-  - <b>Time period:</b> The data is filtered by specific dates, which is a primary factor in defining each scene or state. By filtering the data based on specific dates, each scene represents a distinct time period, revealing the trend of COVID-19 cases within that period.
-  - <b>Date and Case scales:</b> The scales for the axes are set based on the data. These scales are adjusted for each scene based on the range of dates and case numbers within the specific time period. This not only provides an accurate visual representation of the data but also allows for a more precise comparison between different time periods.
+  - <b>Time period:</b> The data is filtered by specific dates, which is a primary factor in defining each scene or state. Each scene, representing a distinct time period, reveals the trend of COVID-19 cases within that period.
+  - <b>Date and Case scales:</b> The scales for the axes are set based on the data. These scales are adjusted for each scene based on the range of dates and case numbers within the specific time period.
   - <b>Data points:</b> Each point represents a specific day's COVID-19 case count. The collection of these points over a given time period forms the trend line for each scene.
-  - <b>Annotations:</b> Annotations include tooltips, general statements, and special highlights. For each scene, annotations are meticulously crafted to include tooltips, general statements, and special highlights that provide additional context and help guide the viewer's understanding of the data. The content and placement of these annotations are tailored to highlight the important events or phenomena within each time period.
+  - <b>Annotations:</b> For each scene, annotations include tooltips, general statements, and special highlights. The content and placement of these annotations are tailored to highlight the important events or phenomena.
   - <b>Colors:</b> Each color represents a specific time period. The use of distinct colors for each time period is another way of defining states and scenes. These colors visually differentiate each scene in the comprehensive line chart, helping the viewer to relate the segmented data to the overall trend.
   - <b>Transition buttons:</b> Transitions between scenes. These buttons are essential interactive elements that enable viewers to navigate between different scenes. The state transitions are thus directly linked to these user actions, adding a dynamic aspect to the narrative.
 
 - In my narrative visualization, each scene represents a different state. These states are defined by the time period and the related COVID-19 case data. The parameters (time, case counts, annotations, colors, and transitions) are adjusted for each scene to reflect the data and story for that specific time period.
 
-- The changes in the state from one scene to the next represent the evolution of the narrative, guided by the parameters, and this gives your viewers a dynamic and engaging storytelling experience.
+- The changes in the state from one scene to the next represent the evolution of the narrative, guided by the parameters, which provides viewers with a dynamic and engaging storytelling experience.
 
 ## <b>Triggers</b>
 
-- Mouseover on dots: When the user hovers over a dot, this triggers a state change where the dot's size increases and a stroke is added around it. Additionally, a tooltip becomes visible, displaying the date and number of cases for the hovered dot. This makes the interaction more engaging and provides detailed information about specific data points.
-- Mousemove on dots: When the user moves the mouse while over a dot, the position of the tooltip changes accordingly. This keeps the tooltip close to the user's cursor and the data point they are currently focusing on.
-- Mouseout from dots: When the user moves the cursor away from a dot, this triggers a state change where the dot's size and stroke are restored to their original state and the tooltip becomes hidden. This returns the visualization to its normal state after the specific interaction is finished.
+- Mouseover on dots: When the user hovers over a dot, this triggers a state change where the dot's size increases and a stroke is added around it. Additionally, a tooltip becomes visible, displaying the date and number of cases for the hovered dot, which makes the interaction more engaging and provides detailed information about specific data points.
 
-- As for affordances, they are clues or indicators that suggest the functionality or possibilities of interaction to the user. In your visualization:
+- Mousemove on dots: When the user moves the mouse while over a dot, the position of the tooltip changes accordinglym, which keeps the tooltip close to the user's cursor and the data point they are currently focusing on.
+
+- Mouseout from dots: When the user moves the cursor away from a dot, this triggers a state change where the dot's size and stroke are restored to their original state and the tooltip becomes hidden.
+
+- As for affordances, they are indicators that suggest the functionality of interaction to the user. In my narrative visualization:
 
   - <b>Dots:</b> The presence of dots on the line graph serves as an affordance, indicating that these points are interactive.
-  - <b>Cursor changes:</b> When the cursor changes upon hovering over a dot (typically to a hand pointer), it suggests to the user that an interaction (like clicking or dragging) is possible.
+  - <b>Cursor changes:</b> When the cursor changes upon hovering over a dot (to a hand pointer), it suggests to the user that an interaction is possible.
   - <b>Tooltip:</b> The appearance of a tooltip on hovering over a dot gives the user information about what that dot represents, providing an immediate understanding of the affordance.
-  - <b>Visual cues:</b> The visual elements like the axes, labels, and annotations guide the user's attention and understanding, suggesting areas of interest or points of focus.
+  - <b>Transition buttons:</b> By using Chrome browser, all transitions buttons appears shaden to show it can be pressed.
