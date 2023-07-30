@@ -2,7 +2,7 @@
 
 ## <b>Messaging</b>
 
-- I want to show the line chart visualizaton of reported new covid-19 case in New York from 2021-01-23 to 2022-02-23. This period exhibits significant fluctuations on the number of new covid case, which allows us to observe the trends during this period and find the relationship between government responses and changes on new covid case.
+- I want to show the line chart visualizaton of reported new covid-19 case in New York from 2021-01-23 to 2022-02-23. This period exhibits significant fluctuations on the number of new covid case , which allows us to observe the four segmented trends during this period and find the relationship between government responses and changes on reported covid case.
 
 ## <b>Narrative Structure</b>
 
