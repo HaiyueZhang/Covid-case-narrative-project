@@ -63,15 +63,15 @@
 
 ## <b>Triggers</b>
 
-- Tooltips and Dots:
+- <b>Tooltips and Dots:</b>
 
-  - Mouseover on dots: When the viewer hovers over a dot, this triggers a state change where the dot's size increases and a stroke is added around it. Additionally, a tooltip becomes visible, displaying the date and number of cases for the hovered dot, which makes the interaction more engaging and provides detailed information about specific data points.
+  - <b>Mouseover on dots:</b> When the viewer hovers over a dot, this triggers a state change where the dot's size increases and a stroke is added around it. Additionally, a tooltip becomes visible, displaying the date and number of cases for the hovered dot, which makes the interaction more engaging and provides detailed information about specific data points.
 
-  - Mousemove on dots: When the viewer moves the mouse while over a dot, the position of the tooltip changes accordinglym, which keeps the tooltip close to the viewer's cursor and the data point they are currently focusing on.
+  - <b>Mousemove on dots:</b> When the viewer moves the mouse while over a dot, the position of the tooltip changes accordinglym, which keeps the tooltip close to the viewer's cursor and the data point they are currently focusing on.
 
-  - Mouseout from dots: When the viewer moves the cursor away from a dot, this triggers a state change where the dot's size and stroke are restored to their original state and the tooltip becomes hidden.
+  - <b>Mouseout from dots:</b> When the viewer moves the cursor away from a dot, this triggers a state change where the dot's size and stroke are restored to their original state and the tooltip becomes hidden.
 
-- Transition buttons: Viewers can click buttons on the top of each scene to switch to any other scenes, which triggers the visualization to change state by transitioning to the next or previous scene. This can also involves updating the data being displayed, changing the scales or colors, adding or removing annotations.
+- <b>Transition buttons:</b> Viewers can click buttons on the top of each scene to switch to any other scenes, which triggers the visualization to change state by transitioning to the next or previous scene. This can also involves updating the data being displayed, changing the scales or colors, adding or removing annotations.
 
 - As for affordances, they are indicators that suggest the functionality of interaction to the viewer. In my narrative visualization:
 
